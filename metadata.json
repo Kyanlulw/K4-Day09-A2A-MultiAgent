@@ -1,0 +1,28 @@
+{
+  "model_name": "nvidia/nemotron-nano-9b-v2:free",
+  "model_parameter_size": "9B",
+  "model_provider": "OpenRouter",
+  "framework": "LangGraph",
+  "orchestration": "LangGraph StateGraph",
+  "architecture": "Full LLM Architecture (Data Lookups + LLM Thinker)",
+  "agent_count": 7,
+  "agents": {
+    "llm_agents": [
+      "Coordinator Agent - case intake & investigation planning",
+      "Customer Agent - identity extraction",
+      "Order & Product Agent - item extraction & total calculation",
+      "Payment Agent - reconciliation",
+      "Delivery Agent - delivery variance logic",
+      "Policy Agent - EC_POLICY_V2 classification & reasoning",
+      "Verifier Agent - output quality review"
+    ],
+    "deterministic_agents": []
+  },
+  "runtime": "Python 3.10+",
+  "dependencies": [
+    "langgraph",
+    "pandas",
+    "openai",
+    "python-dotenv"
+  ]
+}
