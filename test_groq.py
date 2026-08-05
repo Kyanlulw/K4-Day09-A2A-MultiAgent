@@ -5,14 +5,14 @@ from openai import OpenAI
 load_dotenv()
 
 client = OpenAI(
-    base_url="http://localhost:8000/v1",
-    api_key="EMPTY",
+    base_url="https://api.groq.com/openai/v1",
+    api_key=os.environ.get("GROQ_API_KEY"),
 )
 
-print("Testing local vLLM Qwen/Qwen3-8B...")
+print("Testing Groq llama-3.1-8b-instant...")
 try:
     response = client.chat.completions.create(
-        model="Qwen/Qwen3-8B",
+        model="llama-3.1-8b-instant",
         messages=[{"role": "user", "content": "Hello!"}],
         temperature=0.0,
         max_tokens=100

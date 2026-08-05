@@ -1,7 +1,7 @@
 """
 LLM Client - API integration for LLM-based agents.
 
-Uses local vLLM with Qwen/Qwen3-8B for:
+Uses Groq API with llama-3.1-8b-instant for:
 - Coordinator Agent
 - Policy Agent
 - Verifier Agent
@@ -23,20 +23,19 @@ from openai import OpenAI
 
 
 # Model configuration
-MODEL_NAME = "Qwen/Qwen3-8B"
+MODEL_NAME = "llama-3.1-8b-instant"
 MODEL_PARAMETER_SIZE = "8B"
 
-# Rate limit settings (Not needed for local vLLM, so set wait to 0)
+# Rate limit settings
 MAX_RETRIES = 5
-BASE_WAIT_SECONDS = 0.0
+BASE_WAIT_SECONDS = 1.0
 
 
 def get_client() -> OpenAI:
-    """Get OpenAI client configured for local vLLM."""
-    base_url = os.environ.get("VLLM_BASE_URL", "http://localhost:8000/v1")
+    """Get OpenAI client configured for Groq."""
     return OpenAI(
-        base_url=base_url,
-        api_key="EMPTY",  # vLLM doesn't require an API key
+        base_url="https://api.groq.com/openai/v1",
+        api_key=os.environ.get("GROQ_API_KEY"),
         timeout=120.0,
     )
 
@@ -57,7 +56,7 @@ def llm_call(
     response_format: Optional[dict] = None,
 ) -> str:
     """
-    Make a single LLM call to OpenRouter with automatic retry.
+    Make a single LLM call to Groq with automatic retry.
     """
     client = get_client()
 

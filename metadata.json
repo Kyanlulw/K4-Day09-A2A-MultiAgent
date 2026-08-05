@@ -1,7 +1,7 @@
 {
-  "model_name": "Qwen/Qwen3-8B",
+  "model_name": "llama-3.1-8b-instant",
   "model_parameter_size": "8B",
-  "model_provider": "vLLM",
+  "model_provider": "Groq",
   "framework": "LangGraph",
   "orchestration": "LangGraph StateGraph",
   "architecture": "Full LLM Architecture (Data Lookups + LLM Thinker)",
