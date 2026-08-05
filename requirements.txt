@@ -1,0 +1,4 @@
+# This project intentionally uses only the Python standard library.
+# Optional: install and run Ollama, then configure .env or environment variables
+# to enable real <=10B LLM calls for each agent.
+

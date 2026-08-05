@@ -1,121 +1,125 @@
-# Member Role Report — Day 9: Multi Agent A2A
+# Member Role Report - Day 9: Multi-Agent A2A
 
-> Mỗi thành viên trong nhóm tự hoàn thành mẫu này để báo cáo đúng vai trò, phần việc và mức hiểu của mình. Không sao chép nguyên báo cáo chung hoặc báo cáo của thành viên khác. Thay nội dung trong dấu `[ ]` và xóa các dòng hướng dẫn không cần thiết trước khi nộp.
+## 1. Thong tin ca nhan
 
-## 1. Thông tin cá nhân
+| Thong tin | Noi dung |
+| --- | --- |
+| Ho va ten | [Dien ho va ten] |
+| MSSV/MHV | [Dien MSSV/MHV] |
+| Khoa/Lop | K4 |
+| Vai tro chinh | Multi-agent pipeline, data reconciliation, verifier |
+| Ngay hoan thanh | 2026-08-05 |
 
-| Thông tin       | Nội dung     |
-| --------------- | ------------ |
-| Họ và tên       | [Họ và tên]  |
-| MSSV            | [MSSV]       |
-| Khóa/Lớp        | [K4]         |
-| Vai trò chính   | [Vai trò]    |
-| Ngày hoàn thành | [YYYY-MM-DD] |
+## 2. Vai tro va pham vi cong viec
 
-## 2. Vai trò và phạm vi công việc
+| Module/deliverable | File/ham phu trach | Input nhan vao | Output ban giao | Trang thai |
+| --- | --- | --- | --- | --- |
+| Data Retrieval Tool | `tools/data_loader.py` | 9 CSV Olist, `claimed_order_id` | Evidence JSON cho tung case | Hoan thanh |
+| Agent orchestration | `agents/coordinator.py`, `main.py` | `input/EC_XXX.json` | Dieu phoi 7 agent va ghi output | Hoan thanh |
+| Domain agents | `agents/customer_agent.py`, `agents/order_product_agent.py`, `agents/payment_agent.py`, `agents/delivery_agent.py` | Evidence theo domain | Ket qua suy luan tung domain | Hoan thanh |
+| Policy & verification | `agents/policy_agent.py`, `agents/verifier_agent.py` | Ket qua domain agents | Issue, refund, actions, schema check | Hoan thanh |
+| Logging & metadata | `trace_writer.py`, `logging/metadata.json` | Agent prompt/response | `trace.jsonl`, metadata runtime | Hoan thanh |
 
-### Phần việc sở hữu
+## 3. Ket qua theo vai tro
 
-| Module/deliverable | File/hàm phụ trách | Input nhận vào | Output bàn giao   | Trạng thái                            |
-| ------------------ | ------------------ | -------------- | ----------------- | ------------------------------------- |
-| [Phần việc]        | [File/hàm]         | [Input]        | [Output/artifact] | [Hoàn thành/Một phần/Chưa hoàn thành] |
-| [Phần việc]        | [File/hàm]         | [Input]        | [Output/artifact] | [Hoàn thành/Một phần/Chưa hoàn thành] |
+| Nhiem vu da thuc hien | Artifact lien quan | Ket qua ban giao | Cach xac minh |
+| --- | --- | --- | --- |
+| Xay dung pipeline xu ly 50 case | `main.py` | 50 file JSON trong `output/` | Chay `python validate_outputs.py` |
+| Thiet ke 7 agent | `agents/` | Coordinator, Customer, Order/Product, Payment, Delivery, Policy, Verifier | Kiem tra `logging/trace.jsonl` |
+| Ap dung `EC_POLICY_V2` | `agents/policy_agent.py` | Primary issue, secondary issues, root cause, refund, actions | Phan bo issue trong validate output |
+| Viet tai lieu kien truc | `architecture.md` | So do agent, handoff, quyen truy cap du lieu | Doc tai lieu tai root repo |
 
-Chỉ nhận ownership cho phần bạn trực tiếp thực hiện. Liên hệ rõ phần việc của bạn với đầu vào, đầu ra và các thành viên phụ thuộc vào phần đó.
+Output cu the: pipeline da sinh du `EC_001.json` den `EC_050.json`, trace co
+350 dong tuong ung 50 case x 7 buoc, va file `output_submission.zip` chi chua
+50 JSON ket qua.
 
-### Việc hỗ trợ ngoài phạm vi chính
+## 4. Giai thich phan ky thuat da thuc hien
 
-| Hoạt động                 | Thành viên/module được hỗ trợ | Kết quả                 |
-| ------------------------- | ----------------------------- | ----------------------- |
-| [Debug/tích hợp/tài liệu] | [Tên hoặc module]             | [Kết quả và bằng chứng] |
+### Van de can giai quyet
 
-## 3. Kết quả theo vai trò
+Bai toan yeu cau dieu tra khieu nai thuong mai dien tu dua tren nhieu nguon du
+lieu Olist. Mot case khong the ket luan chi tu message cua khach hang, ma phai
+doi chieu order status, timestamps, seller shipping limit, items, payments,
+customer history va product context.
 
-| Nhiệm vụ đã thực hiện | File/hàm/artifact liên quan | Kết quả bàn giao          | Cách xác minh   |
-| --------------------- | --------------------------- | ------------------------- | --------------- |
-| [Mô tả cụ thể]        | [Đường dẫn file]            | [Artifact/metrics/report] | [Lệnh/artifact] |
-| [Mô tả cụ thể]        | [Đường dẫn file]            | [Artifact/metrics/report] | [Lệnh/artifact] |
+### Cach trien khai
 
-Nêu một output cụ thể mà phần việc của bạn tạo ra hoặc giúp xác minh:
+He thong tach thanh 7 agent. Coordinator nhan input, goi Data Retrieval Tool de
+lay evidence tu CSV, sau do chuyen du lieu den cac domain agent. Moi domain
+agent phan tich mot pham vi rieng:
 
-[Mô tả artifact, metric, report hoặc kết quả tích hợp.]
+- Customer Agent xac dinh customer identity va repeat customer.
+- Order & Product Agent xac dinh item, seller, product va category.
+- Payment Agent tinh doi soat tien hang, tien ship va payment.
+- Delivery Agent tinh delivery variance va seller handoff variance.
+- Policy Agent ap dung `EC_POLICY_V2` theo thu tu uu tien.
+- Verifier Agent kiem schema, evidence, limit array va tinh nhat quan.
 
-## 4. Giải thích phần kỹ thuật đã thực hiện
+### Input, output va contract
 
-### Vấn đề cần giải quyết
+| Thanh phan | Mo ta |
+| --- | --- |
+| Input | `input/EC_XXX.json`, gom `case_id`, message va `claimed_order_id` |
+| Output | `output/EC_XXX.json` dung schema cua de bai |
+| Module phu thuoc | `tools/data_loader.py`, 9 CSV trong `data/` |
+| Module su dung output | `validate_outputs.py`, zip submission |
+| Dieu kien loi can xu ly | Order khong co item, timestamp null, split payment, multi-seller, late delivery |
 
-[Phần của bạn giải quyết vấn đề gì trong pipeline?]
-
-### Cách triển khai
-
-[Mô tả thuật toán, quy tắc dữ liệu, orchestration hoặc quyết định chính. Không chỉ chép lại tên hàm.]
-
-### Input, output và contract
-
-| Thành phần              | Mô tả                                  |
-| ----------------------- | -------------------------------------- |
-| Input                   | [Schema, artifact hoặc tham số]        |
-| Output                  | [Schema, artifact hoặc giá trị trả về] |
-| Module phụ thuộc        | [Module/file liên quan]                |
-| Module sử dụng output   | [Module/file liên quan]                |
-| Điều kiện lỗi cần xử lý | [Trường hợp thực tế]                   |
-
-### Cách xác minh
+### Cach xac minh
 
 ```bash
-[Ghi lệnh thực tế đã chạy]
+python main.py
+python validate_outputs.py
 ```
 
-- **Kết quả mong đợi:** [Mô tả.]
-- **Kết quả thực tế:** [Mô tả.]
-- **Artifact/log:** [Đường dẫn; không chứa secret.]
+- Ket qua mong doi: co 50 JSON hop le trong `output/`.
+- Ket qua thuc te: validation passed, 50 output JSON, 350 trace events.
+- Artifact/log: `output/`, `output_submission.zip`, `logging/trace.jsonl`.
 
-## 5. Một quyết định kỹ thuật quan trọng
+## 5. Mot quyet dinh ky thuat quan trong
 
-- **Bối cảnh:** [Vấn đề hoặc lựa chọn cần quyết định.]
-- **Các phương án đã cân nhắc:** [Ít nhất hai phương án.]
-- **Phương án đã chọn:** [Lựa chọn.]
-- **Lý do:** [Trade-off về correctness, data quality, reproducibility, cost hoặc độ phức tạp.]
-- **Bằng chứng quyết định phù hợp:** [Metric, artifact hoặc kết quả thử nghiệm.]
+- Boi canh: Neu de moi agent tu doc CSV truc tiep, luong xu ly de bi lap code,
+  join sai va kho kiem chung.
+- Cac phuong an da can nhac: agent doc CSV truc tiep; hoac Data Retrieval Tool
+  doc CSV roi cap evidence cho agent.
+- Phuong an da chon: Data Retrieval Tool doc CSV, agent chi suy luan tren
+  evidence da trich xuat.
+- Ly do: tach ro truy xuat du lieu va suy luan nghiep vu, de trace, de debug va
+  giam false positive evidence.
+- Bang chung: output validation passed cho 50 case, trace ghi ro input/output
+  cua tung agent.
 
-## 6. Một lỗi hoặc blocker đã xử lý
+## 6. Mot loi/blocker da xu ly
 
-- **Triệu chứng/lỗi nguyên văn:** [Che toàn bộ secret trước khi ghi.]
-- **Lệnh hoặc bước tái hiện:** [Lệnh/bước.]
-- **Nguyên nhân gốc:** [Root cause, không chỉ mô tả triệu chứng.]
-- **Cách xử lý:** [Thay đổi cụ thể.]
-- **Cách xác minh sau khi sửa:** [Lệnh và kết quả.]
-- **Điều học được:** [Bài học kỹ thuật.]
+- Trieu chung: may chay khong co lenh `python` trong PATH va khong co Ollama.
+- Buoc tai hien: chay `python --version` hoac `ollama list`.
+- Nguyen nhan goc: runtime/model chua duoc cau hinh tren may hien tai.
+- Cach xu ly: dung Python runtime bundling cua Codex de chay pipeline; thiet ke
+  LLM client ho tro `.env` de co the bat Ollama/OpenAI-compatible sau.
+- Cach xac minh sau khi sua: chay duoc `main.py`, sinh du 50 output.
+- Dieu hoc duoc: pipeline can co fallback de debug schema, nhung khi nop theo
+  yeu cau LLM thi phai cau hinh model <=10B va chay lai de trace co
+  `llm_enabled=true`.
 
-Nếu chưa xử lý xong:
+## 7. Hieu biet ve luong end-to-end
 
-- **Phạm vi bị ảnh hưởng:** [Module/artifact.]
-- **Những gì đã loại trừ:** [Các giả thuyết đã kiểm tra.]
-- **Bước tiếp theo:** [Hành động có thể kiểm chứng.]
+Du lieu di tu `input/EC_XXX.json` vao Coordinator. Coordinator lay
+`claimed_order_id`, goi Data Retrieval Tool de truy xuat order, customer, items,
+payments, products va seller tu CSV. Cac domain agent phan tich tung phan va tra
+ket qua ve Coordinator. Policy Agent ap dung `EC_POLICY_V2` de chon primary
+issue, secondary issues, responsible parties, refund va actions. Verifier Agent
+kiem tra schema/evidence/limit truoc khi ghi file output.
 
-## 7. Hiểu biết về luồng end-to-end
+Chat luong duoc do bang viec output dung schema, issue dung policy, entity IDs
+dung format, payment/delivery calculation dung, trace co du buoc handoff that.
 
-Giải thích ngắn gọn bằng lời của bạn:
+## 8. Cam ket cua thanh vien
 
-1. Dữ liệu đi từ Crossref đến vector index như thế nào?
-2. Evaluation set và ground-truth document IDs dùng để đo retrieval/answer quality ra sao?
-3. Quality checks khác freshness monitoring ở điểm nào trong bài lab?
-4. Vì sao phải dùng cùng test set cho baseline, corrupted và repaired?
-5. Repair được xem là thành công dựa trên artifact và metric nào?
+- [ ] Noi dung bao cao phan anh dung phan viec va muc hieu cua toi.
+- [ ] Toi co the giai thich luong end-to-end, khong chi module minh phu trach.
+- [ ] Toi khong ghi "da chay thanh cong" cho phan chua duoc kiem chung.
+- [ ] Bao cao khong chua `.env`, API key, token hoac secret.
+- [ ] Bao cao nay khong phai ban sao nguyen van cua bao cao thanh vien khac.
 
-**Câu trả lời:**
-
-[Viết câu trả lời tại đây.]
-
-## 8. Cam kết của thành viên
-
-Đánh dấu sau khi tự kiểm tra:
-
-- [ ] Nội dung báo cáo phản ánh đúng phần việc và mức hiểu của tôi.
-- [ ] Tôi có thể giải thích luồng end-to-end, không chỉ module mình phụ trách.
-- [ ] Tôi không ghi “đã chạy thành công” cho phần chưa được kiểm chứng.
-- [ ] Báo cáo không chứa `.env`, API key, token hoặc secret.
-- [ ] Báo cáo này không phải bản sao nguyên văn của báo cáo nhóm hoặc báo cáo thành viên khác.
-
-**Họ và tên:** [Họ và tên]
-**Ngày xác nhận:** [YYYY-MM-DD]
+**Ho va ten:** [Dien ho va ten]
+**Ngay xac nhan:** 2026-08-05

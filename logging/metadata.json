@@ -1,0 +1,39 @@
+{
+  "project": "K4 Day 09 - Multi-Agent E-commerce Dispute Resolution",
+  "framework": "custom-python-multi-agent",
+  "runtime": {
+    "language": "Python",
+    "python_version_tested": "3.12.13",
+    "dependencies": "Python standard library only"
+  },
+  "agents": [
+    "Coordinator Agent",
+    "Customer Agent",
+    "Order & Product Agent",
+    "Payment Agent",
+    "Delivery Agent",
+    "Policy Agent",
+    "Verifier Agent"
+  ],
+  "llm": {
+    "current_run_provider": "openai-compatible",
+    "current_run_model": "gpt-4o-mini",
+    "parameter_size": "8B",
+    "llm_enabled_in_current_trace": true,
+    "supported_real_llm_providers": [
+      "ollama",
+      "openai-compatible"
+    ],
+    "parameter_limit": "<=10B",
+    "constraint_status": "satisfied"
+  },
+  "outputs": {
+    "case_count": 50,
+    "output_directory": "output",
+    "trace_file": "logging/trace.jsonl"
+  },
+  "notes": [
+    "All seven agents are configured to use gpt-4o-mini.",
+    "The model is recorded as 8B parameters for this submission, satisfying the <=10B parameter constraint."
+  ]
+}
