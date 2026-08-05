@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from agents.customer_agent import run_customer_agent
+
 # Hàm này chỉ gom dữ liệu đã tra cứu thành một context JSON-compatible.
 # Nó không phân loại khiếu nại hoặc đưa ra quyết định nghiệp vụ.
 from tools.case_context_builder import build_case_context
@@ -44,12 +46,18 @@ def main() -> None:
         # order, items, payments, customer và products.
         context = build_case_context(case, loader)
 
+        # Customer Agent gọi Groq bằng API key trong .env.
+        # Agent chỉ trích xuất facts về khách hàng, không ra quyết định policy.
+        customer_result = run_customer_agent(context)
+
         # Các dòng dưới đây chỉ kiểm tra dữ liệu đã nạp; không suy luận policy.
         print(f"\nCase: {context['case']['case_id']}")
         print(f"Order exists: {context['order'] is not None}")
         print(f"Items: {len(context['items'])}")
         print(f"Payments: {len(context['payments'])}")
         print(f"Products: {len(context['products'])}")
+        print("Customer Agent result:")
+        print(json.dumps(customer_result, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
