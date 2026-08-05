@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -29,30 +30,43 @@ class LLMClient:
     def __init__(self) -> None:
         _load_dotenv(Path.cwd() / ".env")
         self.provider = os.getenv("LLM_PROVIDER", "fallback").strip().lower()
-        self.model = os.getenv("LLM_MODEL", "local-rule-reasoner-0B").strip()
+        self.model = os.getenv("LLM_MODEL", "gpt-4o-mini").strip()
         self.base_url = os.getenv("LLM_BASE_URL", "").strip()
         self.api_key = os.getenv("LLM_API_KEY", "").strip()
         self.enabled = self.provider in {"ollama", "openai"} and bool(self.base_url)
         self.require_llm = os.getenv("LLM_REQUIRE", "true").strip().lower() in {"1", "true", "yes"}
         self.timeout_seconds = int(os.getenv("LLM_TIMEOUT_SECONDS", "45"))
+        self.max_retries = int(os.getenv("LLM_MAX_RETRIES", "3"))
         self.last_error = ""
 
     def complete_json(self, system_prompt: str, user_payload: dict[str, Any]) -> dict[str, Any] | None:
         if not self.enabled:
             return None
 
+        strict_system_prompt = (
+            system_prompt
+            + " Use the exact field names requested by the user payload. Return a compact JSON object only."
+        )
         messages = [
-            {"role": "system", "content": system_prompt},
+            {"role": "system", "content": strict_system_prompt},
             {
                 "role": "user",
                 "content": json.dumps(user_payload, ensure_ascii=False, separators=(",", ":")),
             },
         ]
 
-        if self.provider == "ollama":
-            return self._complete_ollama(messages)
-        if self.provider == "openai":
-            return self._complete_openai(messages)
+        for attempt in range(1, self.max_retries + 1):
+            if self.provider == "ollama":
+                response = self._complete_ollama(messages)
+            elif self.provider == "openai":
+                response = self._complete_openai(messages)
+            else:
+                response = None
+            if response is not None:
+                return response
+            if attempt < self.max_retries:
+                print(f"LLM call failed, retrying {attempt}/{self.max_retries}...", flush=True)
+                time.sleep(2 * attempt)
         return None
 
     def _complete_ollama(self, messages: list[dict[str, str]]) -> dict[str, Any] | None:

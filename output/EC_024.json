@@ -1,8 +1,10 @@
 {
   "case_id": "EC_024",
   "case_assessment": {
-    "primary_issue": "Order Canceled",
-    "secondary_issues": [],
+    "primary_issue": "canceled_order_paid",
+    "secondary_issues": [
+      "multi_item_order"
+    ],
     "case_status": "action_required",
     "confidence": 0.94
   },
@@ -68,7 +70,10 @@
       }
     ],
     "responsible_parties": [
-      "Customer"
+      {
+        "party_type": "platform",
+        "party_id": "OLIST_PLATFORM"
+      }
     ]
   },
   "evidence_ids": [

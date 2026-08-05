@@ -43,14 +43,7 @@ class OrderProductAgent(BaseAgent):
 
     def normalize(self, prompt: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]:
         normalized = self.reason(prompt)
-        normalized.update({key: value for key, value in response.items() if value is not None})
-        normalized["item_ids"] = normalized["item_ids"][:5]
-        normalized["seller_ids"] = normalized["seller_ids"][:3]
-        normalized["product_ids"] = normalized["product_ids"][:5]
-        normalized["category_names"] = normalized["category_names"][:5]
-        normalized["multi_item_order"] = len(prompt.get("items") or []) >= 2
-        normalized["multi_seller_order"] = len(normalized.get("all_seller_ids") or normalized["seller_ids"]) >= 2
-        normalized["multiple_categories"] = len(normalized["category_names"]) >= 2
+        normalized["llm_assessment"] = response
         return normalized
 
 

@@ -1,10 +1,14 @@
 {
   "case_id": "EC_008",
   "case_assessment": {
-    "primary_issue": "Late Delivery",
-    "secondary_issues": [],
-    "case_status": "action_required",
-    "confidence": 0.92
+    "primary_issue": "valid_split_payment",
+    "secondary_issues": [
+      "multi_item_order",
+      "multi_seller_order",
+      "split_payment"
+    ],
+    "case_status": "no_action",
+    "confidence": 0.91
   },
   "affected_entities": {
     "order_ids": [
@@ -40,7 +44,7 @@
     "delivered_at": "2018-05-21 22:16:02",
     "estimated_delivery_at": "2018-05-25 00:00:00",
     "carrier_handoff_at": "2018-05-07 14:31:00",
-    "delivery_variance_hours": 5.75,
+    "delivery_variance_hours": -73.73,
     "seller_handoff_analysis": [
       {
         "seller_id": "6b3bd31ad8fcda4b2635ec9f3ff2ecdf",
@@ -73,14 +77,11 @@
   "root_cause_analysis": {
     "ranked_causes": [
       {
-        "cause_code": "CARRIER_DELIVERED_AFTER_ESTIMATE",
+        "cause_code": "MULTIPLE_PAYMENTS_RECONCILED",
         "rank": 1
       }
     ],
-    "responsible_parties": [
-      "Seller 1 (6b3bd31ad8fcda4b2635ec9f3ff2ecdf)",
-      "Seller 2 (c32fc744b9160ac853450488e3cfea93)"
-    ]
+    "responsible_parties": []
   },
   "evidence_ids": [
     "order:23c312ca9f0242a48a95e5643bee2645",
@@ -88,17 +89,14 @@
     "item:23c312ca9f0242a48a95e5643bee2645:2",
     "payment:23c312ca9f0242a48a95e5643bee2645:2",
     "payment:23c312ca9f0242a48a95e5643bee2645:1",
-    "policy:CARRIER_DELIVERED_AFTER_ESTIMATE"
+    "policy:MULTIPLE_PAYMENTS_RECONCILED"
   ],
   "financial_resolution": {
     "currency": "BRL",
-    "recommended_refund_brl": 34.93
+    "recommended_refund_brl": 0.0
   },
   "resolution_actions": [
-    "refund_freight",
-    "review_carrier_delay",
-    "verify_refund_completion",
-    "coordinate_multi_seller_case",
-    "verify_payment_allocation"
+    "explain_valid_split_payment",
+    "coordinate_multi_seller_case"
   ]
 }

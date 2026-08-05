@@ -115,48 +115,8 @@ class PolicyAgent(BaseAgent):
 
     def normalize(self, prompt: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]:
         baseline = self.reason(prompt)
-        normalized = dict(baseline)
-        normalized.update({key: value for key, value in response.items() if value is not None})
-
-        if "recommended_refund_brl" not in normalized:
-            normalized["recommended_refund_brl"] = normalized.get("refund_brl", normalized.get("refund", 0))
-        normalized["recommended_refund_brl"] = round(float(normalized["recommended_refund_brl"] or 0), 2)
-        normalized["case_status"] = (
-            normalized.get("case_status")
-            or ("action_required" if normalized["recommended_refund_brl"] > 0 else "no_action")
-        )
-        if normalized["case_status"] not in {"action_required", "no_action"}:
-            normalized["case_status"] = (
-                "action_required" if normalized["recommended_refund_brl"] > 0 else "no_action"
-            )
-
-        normalized["secondary_issues"] = _ordered_subset(
-            normalized.get("secondary_issues", []),
-            [
-                "multi_item_order",
-                "multi_seller_order",
-                "split_payment",
-                "repeat_customer",
-                "multiple_categories",
-            ],
-        )
-        normalized["resolution_actions"] = normalized.get("resolution_actions") or normalized.get("actions") or baseline[
-            "resolution_actions"
-        ]
-        normalized["resolution_actions"] = normalized["resolution_actions"][:5]
-        normalized["ranked_causes"] = normalized.get("ranked_causes") or baseline["ranked_causes"]
-        normalized["ranked_causes"] = normalized["ranked_causes"][:3]
-        normalized["responsible_parties"] = normalized.get("responsible_parties") or baseline[
-            "responsible_parties"
-        ]
-        normalized["responsible_parties"] = normalized["responsible_parties"][:3]
-        normalized["evidence_ids"] = _repair_evidence_ids(
-            normalized.get("evidence_ids") or baseline["evidence_ids"],
-            baseline["evidence_ids"],
-        )[:20]
-        normalized["confidence"] = float(normalized.get("confidence", baseline["confidence"]))
-        normalized["confidence"] = min(1.0, max(0.0, normalized["confidence"]))
-        return normalized
+        baseline["llm_assessment"] = response
+        return baseline
 
 
 def _confidence(primary_issue: str, reconciled: bool | None) -> float:
@@ -175,19 +135,3 @@ def _ordered_subset(values: list[str], order: list[str]) -> list[str]:
     value_set = set(values)
     return [value for value in order if value in value_set]
 
-
-def _repair_evidence_ids(values: list[str], baseline: list[str]) -> list[str]:
-    valid_prefixes = ("order:", "item:", "payment:", "seller:", "policy:")
-    repaired: list[str] = []
-    baseline_by_suffix = {item.split(":", 1)[1]: item for item in baseline if ":" in item}
-    for value in values:
-        if value.startswith(valid_prefixes):
-            candidate = value
-        else:
-            candidate = baseline_by_suffix.get(value)
-        if candidate and candidate in baseline and candidate not in repaired:
-            repaired.append(candidate)
-    for value in baseline:
-        if value not in repaired:
-            repaired.append(value)
-    return repaired

@@ -23,7 +23,7 @@ def main() -> None:
     data_store = OlistDataStore(root)
     llm_client = LLMClient()
     coordinator = CoordinatorAgent(llm_client)
-    trace_writer = TraceWriter(root / "logging" / "trace.jsonl")
+    trace_writer = TraceWriter(root / "logging" / "trace.jsonl", reset=not bool(args.case))
     output_dir = root / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -50,4 +50,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

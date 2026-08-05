@@ -1,8 +1,11 @@
 {
   "case_id": "EC_017",
   "case_assessment": {
-    "primary_issue": "Late Delivery",
-    "secondary_issues": [],
+    "primary_issue": "late_delivery_logistics",
+    "secondary_issues": [
+      "multi_item_order",
+      "repeat_customer"
+    ],
     "case_status": "action_required",
     "confidence": 0.92
   },
@@ -40,7 +43,7 @@
     "delivered_at": "2018-04-11 19:56:32",
     "estimated_delivery_at": "2018-03-20 00:00:00",
     "carrier_handoff_at": "2018-02-26 21:39:30",
-    "delivery_variance_hours": 1,
+    "delivery_variance_hours": 547.94,
     "seller_handoff_analysis": [
       {
         "seller_id": "8fec2e460530482132c436cfb5439925",
@@ -71,7 +74,10 @@
       }
     ],
     "responsible_parties": [
-      "Seller"
+      {
+        "party_type": "logistics_provider",
+        "party_id": "LOGISTICS_PROVIDER"
+      }
     ]
   },
   "evidence_ids": [

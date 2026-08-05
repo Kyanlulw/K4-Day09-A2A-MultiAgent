@@ -55,11 +55,7 @@ class DeliveryAgent(BaseAgent):
 
     def normalize(self, prompt: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]:
         normalized = self.reason(prompt)
-        normalized.update({key: value for key, value in response.items() if value is not None})
-        normalized["seller_handoff_analysis"] = normalized["seller_handoff_analysis"][:3]
-        normalized["late_handoff_seller_ids"] = normalized["late_handoff_seller_ids"][:3]
-        variance = normalized.get("delivery_variance_hours")
-        normalized["late_delivery"] = bool(variance is not None and variance > 0)
+        normalized["llm_assessment"] = response
         return normalized
 
 

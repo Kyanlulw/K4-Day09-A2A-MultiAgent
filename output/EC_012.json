@@ -1,8 +1,10 @@
 {
   "case_id": "EC_012",
   "case_assessment": {
-    "primary_issue": "Order Unavailable",
-    "secondary_issues": [],
+    "primary_issue": "unavailable_order_paid",
+    "secondary_issues": [
+      "repeat_customer"
+    ],
     "case_status": "action_required",
     "confidence": 0.94
   },
@@ -54,8 +56,10 @@
       }
     ],
     "responsible_parties": [
-      "Seller",
-      "Logistics Provider"
+      {
+        "party_type": "platform",
+        "party_id": "OLIST_PLATFORM"
+      }
     ]
   },
   "evidence_ids": [

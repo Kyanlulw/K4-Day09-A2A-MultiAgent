@@ -1,8 +1,11 @@
 {
   "case_id": "EC_006",
   "case_assessment": {
-    "primary_issue": "Late Delivery",
-    "secondary_issues": [],
+    "primary_issue": "late_delivery_seller",
+    "secondary_issues": [
+      "multi_item_order",
+      "repeat_customer"
+    ],
     "case_status": "action_required",
     "confidence": 0.92
   },
@@ -41,7 +44,7 @@
     "delivered_at": "2018-03-21 21:28:39",
     "estimated_delivery_at": "2018-03-16 00:00:00",
     "carrier_handoff_at": "2018-03-08 19:58:30",
-    "delivery_variance_hours": 120.81666666666666,
+    "delivery_variance_hours": 141.48,
     "seller_handoff_analysis": [
       {
         "seller_id": "897060da8b9a21f655304d50fd935913",
@@ -74,16 +77,19 @@
       }
     ],
     "responsible_parties": [
-      "Seller"
+      {
+        "party_type": "seller",
+        "party_id": "897060da8b9a21f655304d50fd935913"
+      }
     ]
   },
   "evidence_ids": [
-    "payment:0e4a4de1d15b6df8d4335fb2db61667a:1",
     "order:0e4a4de1d15b6df8d4335fb2db61667a",
     "item:0e4a4de1d15b6df8d4335fb2db61667a:1",
     "item:0e4a4de1d15b6df8d4335fb2db61667a:2",
     "item:0e4a4de1d15b6df8d4335fb2db61667a:3",
     "item:0e4a4de1d15b6df8d4335fb2db61667a:4",
+    "payment:0e4a4de1d15b6df8d4335fb2db61667a:1",
     "seller:897060da8b9a21f655304d50fd935913",
     "policy:SELLER_HANDOFF_AFTER_LIMIT"
   ],

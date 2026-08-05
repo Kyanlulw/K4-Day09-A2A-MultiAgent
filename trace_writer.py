@@ -8,10 +8,11 @@ from agents.base import AgentResult
 
 
 class TraceWriter:
-    def __init__(self, path: Path) -> None:
+    def __init__(self, path: Path, reset: bool = True) -> None:
         self.path = path
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text("", encoding="utf-8")
+        if reset:
+            self.path.write_text("", encoding="utf-8")
 
     def write_case(
         self,
@@ -52,4 +53,3 @@ class TraceWriter:
                 )
                 + "\n"
             )
-

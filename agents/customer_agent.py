@@ -23,7 +23,5 @@ class CustomerAgent(BaseAgent):
 
     def normalize(self, prompt: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]:
         normalized = self.reason(prompt)
-        normalized.update({key: value for key, value in response.items() if value is not None})
-        normalized["related_order_ids"] = normalized["related_order_ids"][:5]
-        normalized["repeat_customer"] = bool(normalized["related_order_ids"])
+        normalized["llm_assessment"] = response
         return normalized

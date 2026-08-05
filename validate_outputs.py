@@ -23,6 +23,15 @@ REQUIRED_TOP_LEVEL = {
     "resolution_actions",
 }
 
+ALLOWED_PRIMARY_ISSUES = {
+    "canceled_order_paid",
+    "unavailable_order_paid",
+    "late_delivery_seller",
+    "late_delivery_logistics",
+    "valid_split_payment",
+    "unsupported_late_claim",
+}
+
 
 def main() -> None:
     files = sorted(OUTPUT_DIR.glob("EC_*.json"))
@@ -38,6 +47,9 @@ def main() -> None:
         if missing:
             raise SystemExit(f"{path.name} missing fields: {sorted(missing)}")
         confidence = data["case_assessment"]["confidence"]
+        primary_issue = data["case_assessment"]["primary_issue"]
+        if primary_issue not in ALLOWED_PRIMARY_ISSUES:
+            raise SystemExit(f"{path.name} invalid primary_issue: {primary_issue}")
         if not 0 <= confidence <= 1:
             raise SystemExit(f"{path.name} invalid confidence: {confidence}")
         refund = data["financial_resolution"]["recommended_refund_brl"]
@@ -54,4 +66,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

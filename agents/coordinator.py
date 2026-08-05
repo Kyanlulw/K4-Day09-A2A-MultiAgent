@@ -89,10 +89,10 @@ class CoordinatorAgent:
                     "order_delivered_customer_date": order.get("order_delivered_customer_date"),
                     "order_estimated_delivery_date": order.get("order_estimated_delivery_date"),
                 },
-                "customer": customer_result.response,
-                "order_product": order_product_result.response,
-                "payment": payment_result.response,
-                "delivery": delivery_result.response,
+                "customer": _strip_llm_notes(customer_result.response),
+                "order_product": _strip_llm_notes(order_product_result.response),
+                "payment": _strip_llm_notes(payment_result.response),
+                "delivery": _strip_llm_notes(delivery_result.response),
             }
         )
         traces.append(policy_result)
@@ -173,3 +173,7 @@ class CoordinatorAgent:
             },
             "resolution_actions": policy["resolution_actions"],
         }
+
+
+def _strip_llm_notes(payload: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in payload.items() if key != "llm_assessment"}

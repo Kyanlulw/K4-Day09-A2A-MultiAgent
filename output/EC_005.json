@@ -1,8 +1,11 @@
 {
   "case_id": "EC_005",
   "case_assessment": {
-    "primary_issue": "Late Delivery",
-    "secondary_issues": [],
+    "primary_issue": "late_delivery_logistics",
+    "secondary_issues": [
+      "multi_item_order",
+      "multi_seller_order"
+    ],
     "case_status": "action_required",
     "confidence": 0.92
   },
@@ -39,7 +42,7 @@
     "delivered_at": "2017-12-11 22:24:54",
     "estimated_delivery_at": "2017-12-07 00:00:00",
     "carrier_handoff_at": "2017-11-22 00:52:52",
-    "delivery_variance_hours": 112.5,
+    "delivery_variance_hours": 118.42,
     "seller_handoff_analysis": [
       {
         "seller_id": "dc4a0fc896dc34b0d5bfec8438291c80",
@@ -76,14 +79,17 @@
       }
     ],
     "responsible_parties": [
-      "Seller"
+      {
+        "party_type": "logistics_provider",
+        "party_id": "LOGISTICS_PROVIDER"
+      }
     ]
   },
   "evidence_ids": [
-    "payment:3a20bcc250e5404ca717dfa90e8a9c05:1",
-    "item:3a20bcc250e5404ca717dfa90e8a9c05:2",
     "order:3a20bcc250e5404ca717dfa90e8a9c05",
     "item:3a20bcc250e5404ca717dfa90e8a9c05:1",
+    "item:3a20bcc250e5404ca717dfa90e8a9c05:2",
+    "payment:3a20bcc250e5404ca717dfa90e8a9c05:1",
     "policy:CARRIER_DELIVERED_AFTER_ESTIMATE"
   ],
   "financial_resolution": {

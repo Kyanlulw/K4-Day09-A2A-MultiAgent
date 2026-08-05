@@ -48,12 +48,7 @@ class PaymentAgent(BaseAgent):
 
     def normalize(self, prompt: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]:
         normalized = self.reason(prompt)
-        normalized.update({key: value for key, value in response.items() if value is not None})
-        normalized["currency"] = "BRL"
-        normalized["payment_ids"] = normalized["payment_ids"][:5]
-        normalized["payment_types"] = normalized["payment_types"][:5]
-        normalized["payment_row_count"] = len(prompt.get("payments") or [])
-        normalized["split_payment"] = normalized["payment_row_count"] >= 2
+        normalized["llm_assessment"] = response
         return normalized
 
 
