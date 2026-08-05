@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from agents.customer_agent import run_customer_agent
+from agents.delivery_agent import run_delivery_agent
 from agents.order_product_agent import run_order_product_agent
 from agents.payment_agent import run_payment_agent
 
@@ -59,6 +60,9 @@ def main() -> None:
         # Payment Agent only reconciles provided monetary facts.
         payment_result = run_payment_agent(context)
 
+        # Delivery Agent analyses the supplied timestamp and handoff facts.
+        delivery_result = run_delivery_agent(context)
+
         # Các dòng dưới đây chỉ kiểm tra dữ liệu đã nạp; không suy luận policy.
         print(f"\nCase: {context['case']['case_id']}")
         print(f"Order exists: {context['order'] is not None}")
@@ -71,6 +75,8 @@ def main() -> None:
         print(json.dumps(order_product_result, ensure_ascii=False, indent=2))
         print("Payment Agent result:")
         print(json.dumps(payment_result, ensure_ascii=False, indent=2))
+        print("Delivery Agent result:")
+        print(json.dumps(delivery_result, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
