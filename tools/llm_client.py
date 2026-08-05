@@ -23,8 +23,8 @@ from openai import OpenAI
 
 
 # Model configuration
-MODEL_NAME = "kanocz/Qwen3.5-9B-Claude-4.6-HighIQ-THINKING-HERETIC-UNCENSORED-FP8-vLLM"
-MODEL_PARAMETER_SIZE = "9B"
+MODEL_NAME = "Qwen/Qwen3-8B"
+MODEL_PARAMETER_SIZE = "8B"
 
 # Rate limit settings (Not needed for local vLLM, so set wait to 0)
 MAX_RETRIES = 5
