@@ -5,6 +5,7 @@ from agents.customer_agent import run_customer_agent
 from agents.delivery_agent import run_delivery_agent
 from agents.order_product_agent import run_order_product_agent
 from agents.payment_agent import run_payment_agent
+from agents.policy_agent import run_policy_agent
 
 # Hàm này chỉ gom dữ liệu đã tra cứu thành một context JSON-compatible.
 # Nó không phân loại khiếu nại hoặc đưa ra quyết định nghiệp vụ.
@@ -18,6 +19,7 @@ PROJECT_ROOT = Path(__file__).parent
 # Đường dẫn đến dữ liệu nguồn và các case đầu vào.
 DATA_DIR = PROJECT_ROOT / "data"
 INPUT_DIR = PROJECT_ROOT / "input"
+OUTPUT_DIR = PROJECT_ROOT / "output"
 
 
 def load_all_cases(input_dir: Path) -> list[dict]:
@@ -42,6 +44,7 @@ def main() -> None:
     cases = load_all_cases(INPUT_DIR)
 
     print(f"Loaded {len(cases)} cases.")
+    OUTPUT_DIR.mkdir(exist_ok=True)
 
     # Duyệt từng case để tạo hồ sơ dữ liệu chung cho các LLM agent ở bước sau.
     for case in cases:
@@ -62,6 +65,12 @@ def main() -> None:
 
         # Delivery Agent analyses the supplied timestamp and handoff facts.
         delivery_result = run_delivery_agent(context)
+        final_output = run_policy_agent(
+            context, customer_result, order_product_result, payment_result, delivery_result
+        )
+        output_path = OUTPUT_DIR / f"{context['case']['case_id']}.json"
+        with output_path.open("w", encoding="utf-8") as file:
+            json.dump(final_output, file, ensure_ascii=False, indent=2)
 
         # Các dòng dưới đây chỉ kiểm tra dữ liệu đã nạp; không suy luận policy.
         print(f"\nCase: {context['case']['case_id']}")
