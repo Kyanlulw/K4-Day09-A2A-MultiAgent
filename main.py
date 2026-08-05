@@ -13,6 +13,7 @@ from tools.case_context_builder import build_case_context
 # DataLoader đọc 9 CSV một lần và cung cấp các hàm tra cứu theo ID.
 from tools.data_loader import DataLoader
 from tools.trace_writer import write_trace
+from tools.output_validator import validate_output
 
 
 # Lấy đúng thư mục chứa file main.py, không phụ thuộc terminal đang đứng ở đâu.
@@ -71,6 +72,7 @@ def main() -> None:
         final_output = run_policy_agent(
             context, customer_result, order_product_result, payment_result, delivery_result
         )
+        validate_output(final_output, context["case"]["case_id"])
         output_path = OUTPUT_DIR / f"{context['case']['case_id']}.json"
         with output_path.open("w", encoding="utf-8") as file:
             json.dump(final_output, file, ensure_ascii=False, indent=2)
