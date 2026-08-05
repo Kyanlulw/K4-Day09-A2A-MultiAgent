@@ -23,25 +23,19 @@ from openai import OpenAI
 
 
 # Model configuration
-MODEL_NAME = "nvidia/nemotron-nano-9b-v2:free"
-MODEL_PARAMETER_SIZE = "9B"
+MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
+MODEL_PARAMETER_SIZE = "7B"
 
-# Rate limit settings
+# Rate limit settings (Not needed for local vLLM, so set wait to 0)
 MAX_RETRIES = 5
-BASE_WAIT_SECONDS = 3.0
+BASE_WAIT_SECONDS = 0.0
 
 
 def get_client() -> OpenAI:
-    """Get OpenAI client configured for OpenRouter."""
-    api_key = os.environ.get("OPENROUTER_API_KEY")
-    if not api_key:
-        raise ValueError(
-            "OPENROUTER_API_KEY not found in environment. "
-            "Set it in .env file or export OPENROUTER_API_KEY=..."
-        )
+    """Get OpenAI client configured for local vLLM."""
     return OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=api_key,
+        base_url="http://localhost:8000/v1",
+        api_key="EMPTY",  # vLLM doesn't require an API key
     )
 
 
