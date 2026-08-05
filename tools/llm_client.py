@@ -1,7 +1,7 @@
 """
-LLM Client - OpenRouter API integration for LLM-based agents.
+LLM Client - API integration for LLM-based agents.
 
-Uses OpenRouter with nvidia/nemotron-nano-9b-v2:free for:
+Uses local vLLM with Qwen/Qwen3-8B for:
 - Coordinator Agent
 - Policy Agent
 - Verifier Agent

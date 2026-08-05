@@ -1,7 +1,7 @@
 {
-  "model_name": "nvidia/nemotron-nano-9b-v2:free",
-  "model_parameter_size": "9B",
-  "model_provider": "OpenRouter",
+  "model_name": "Qwen/Qwen3-8B",
+  "model_parameter_size": "8B",
+  "model_provider": "vLLM",
   "framework": "LangGraph",
   "orchestration": "LangGraph StateGraph",
   "architecture": "Full LLM Architecture (Data Lookups + LLM Thinker)",
