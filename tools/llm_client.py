@@ -60,7 +60,9 @@ def ask_llm(
             response = client.chat.completions.create(
                 model=MODEL_NAME,
                 temperature=0,
-                max_tokens=250,
+                # Agents return structured JSON; reserve enough output tokens
+                # to finish a valid object instead of truncating mid-document.
+                max_tokens=600,
                 response_format={"type": "json_object"},
                 messages=messages,
             )
