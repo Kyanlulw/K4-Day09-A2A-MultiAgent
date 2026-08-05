@@ -33,9 +33,11 @@ BASE_WAIT_SECONDS = 0.0
 
 def get_client() -> OpenAI:
     """Get OpenAI client configured for local vLLM."""
+    base_url = os.environ.get("VLLM_BASE_URL", "http://localhost:8000/v1")
     return OpenAI(
-        base_url="http://localhost:8000/v1",
+        base_url=base_url,
         api_key="EMPTY",  # vLLM doesn't require an API key
+        timeout=120.0,
     )
 
 
