@@ -10,22 +10,22 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_KEY = os.getenv("OPENROUTER_API_KEY")
+API_KEY = os.getenv("GROQ_API_KEY")
 
 if not API_KEY:
     raise RuntimeError(
-        "OPENROUTER_API_KEY was not found. "
+        "GROQ_API_KEY was not found. "
         "Add it to the local .env file."
     )
 
-# Public model identifier: Qwen 2.5 7B, which meets the <= 10B requirement.
-MODEL_NAME = "qwen/qwen-2.5-7b-instruct"
-API_URL = "https://openrouter.ai/api/v1/chat/completions"
+# Llama 3.1 8B meets the assignment's <= 10B parameter requirement.
+MODEL_NAME = "llama-3.1-8b-instant"
+API_URL = "https://api.groq.com/openai/v1/chat/completions"
 MAX_RATE_LIMIT_RETRIES = 8
 
 
 def ask_llm(system_prompt: str, user_payload: dict[str, Any]) -> dict[str, Any]:
-    """Call OpenRouter and return the model's JSON object."""
+    """Call Groq and return the model's JSON object."""
     body = {
         "model": MODEL_NAME,
         "temperature": 0,
@@ -58,10 +58,10 @@ def ask_llm(system_prompt: str, user_payload: dict[str, Any]) -> dict[str, Any]:
         except HTTPError as error:
             if error.code != 429 or attempt == MAX_RATE_LIMIT_RETRIES:
                 details = error.read().decode("utf-8", errors="replace")
-                raise RuntimeError(f"OpenRouter API error {error.code}: {details}") from error
+                raise RuntimeError(f"Groq API error {error.code}: {details}") from error
 
             wait_seconds = max(1.0, float(error.headers.get("Retry-After", "1")))
             print(f"Rate limit reached; waiting {wait_seconds:.1f}s before retry.")
             time.sleep(wait_seconds)
 
-    raise RuntimeError("OpenRouter request did not complete.")
+    raise RuntimeError("Groq request did not complete.")
