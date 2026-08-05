@@ -12,6 +12,7 @@ from agents.policy_agent import run_policy_agent
 from tools.case_context_builder import build_case_context
 # DataLoader đọc 9 CSV một lần và cung cấp các hàm tra cứu theo ID.
 from tools.data_loader import DataLoader
+from tools.trace_writer import write_trace
 
 
 # Lấy đúng thư mục chứa file main.py, không phụ thuộc terminal đang đứng ở đâu.
@@ -20,6 +21,7 @@ PROJECT_ROOT = Path(__file__).parent
 DATA_DIR = PROJECT_ROOT / "data"
 INPUT_DIR = PROJECT_ROOT / "input"
 OUTPUT_DIR = PROJECT_ROOT / "output"
+TRACE_PATH = PROJECT_ROOT / "logging" / "trace.jsonl"
 
 
 def load_all_cases(input_dir: Path) -> list[dict]:
@@ -45,6 +47,7 @@ def main() -> None:
 
     print(f"Loaded {len(cases)} cases.")
     OUTPUT_DIR.mkdir(exist_ok=True)
+    TRACE_PATH.write_text("", encoding="utf-8")
 
     # Duyệt từng case để tạo hồ sơ dữ liệu chung cho các LLM agent ở bước sau.
     for case in cases:
@@ -71,6 +74,7 @@ def main() -> None:
         output_path = OUTPUT_DIR / f"{context['case']['case_id']}.json"
         with output_path.open("w", encoding="utf-8") as file:
             json.dump(final_output, file, ensure_ascii=False, indent=2)
+        write_trace(TRACE_PATH, {"case_id": context["case"]["case_id"], "agents": ["customer", "order_product", "payment", "delivery", "policy"], "output_file": str(output_path), "status": "completed"})
 
         # Các dòng dưới đây chỉ kiểm tra dữ liệu đã nạp; không suy luận policy.
         print(f"\nCase: {context['case']['case_id']}")
