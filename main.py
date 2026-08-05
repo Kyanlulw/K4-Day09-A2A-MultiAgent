@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from agents.customer_agent import run_customer_agent
+from agents.order_product_agent import run_order_product_agent
 
 # Hàm này chỉ gom dữ liệu đã tra cứu thành một context JSON-compatible.
 # Nó không phân loại khiếu nại hoặc đưa ra quyết định nghiệp vụ.
@@ -50,6 +51,10 @@ def main() -> None:
         # Agent chỉ trích xuất facts về khách hàng, không ra quyết định policy.
         customer_result = run_customer_agent(context)
 
+        # Order & Product Agent trích xuất item, seller, product và category facts.
+        # Agent này cũng không phân loại khiếu nại hoặc tính refund.
+        order_product_result = run_order_product_agent(context)
+
         # Các dòng dưới đây chỉ kiểm tra dữ liệu đã nạp; không suy luận policy.
         print(f"\nCase: {context['case']['case_id']}")
         print(f"Order exists: {context['order'] is not None}")
@@ -58,6 +63,8 @@ def main() -> None:
         print(f"Products: {len(context['products'])}")
         print("Customer Agent result:")
         print(json.dumps(customer_result, ensure_ascii=False, indent=2))
+        print("Order & Product Agent result:")
+        print(json.dumps(order_product_result, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
